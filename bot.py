@@ -1,7 +1,7 @@
 import instaloader
 import os
 import asyncio
-from aiogram import Bot, Dispatcher, types
+from aiogram import Bot, Dispatcher, types, F
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 # Укажи свой токен
@@ -29,11 +29,15 @@ MESSAGES = {
 
 # Клавиатура для выбора языка
 lang_keyboard = ReplyKeyboardMarkup(
-    keyboard=[[KeyboardButton(flag)] for flag in LANGUAGES],
+    keyboard=[[types.KeyboardButton(text=flag)] for flag in LANGUAGES.keys()],
     resize_keyboard=True
 )
 
-@dp.message()
+@dp.message(F.text == "/start")
+async def start_command(message: types.Message):
+    await message.reply(MESSAGES["en"]["start"], reply_markup=lang_keyboard)
+
+@dp.message(F.text)
 async def handle_message(message: types.Message):
     user_id = message.from_user.id
     text = message.text
@@ -63,15 +67,10 @@ async def handle_message(message: types.Message):
         loader.download_post(post, target="downloads")
         
         for file in os.listdir("downloads"):
-            if file.endswith(".mp4") or file.endswith(".jpg"):
+            if file.endswith(".mp4"):
                 file_path = os.path.join("downloads", file)
                 media = types.FSInputFile(file_path)  # Используем FSInputFile
-                
-                if file.endswith(".mp4"):
-                    await message.answer_video(media, caption="🎬 Video downloaded from Instagram!")
-                else:
-                    await message.answer_photo(media, caption="📷 Photo from Instagram!")
-                
+                await message.answer_video(media, caption="🎬 Video downloaded from Instagram!")
                 os.remove(file_path)
     
     except Exception as e:
