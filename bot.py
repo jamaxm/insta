@@ -28,9 +28,10 @@ MESSAGES = {
 }
 
 # Клавиатура для выбора языка
-lang_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-for flag, lang in LANGUAGES.items():
-    lang_keyboard.add(KeyboardButton(flag))
+lang_keyboard = ReplyKeyboardMarkup(
+    keyboard=[[KeyboardButton(flag)] for flag in LANGUAGES],
+    resize_keyboard=True
+)
 
 @dp.message()
 async def handle_message(message: types.Message):
