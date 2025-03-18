@@ -1,2 +1,3 @@
 aiogram
 instaloader
+asyncio
