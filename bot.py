@@ -5,7 +5,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 # Укажи свой токен
-TOKEN = "7663426379:AAFR6lhEHn5EJBlAOu6KbWqVl906BF_RcsQ"
+TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -74,7 +74,7 @@ async def handle_message(message: types.Message):
                 os.remove(file_path)
     
     except Exception as e:
-        await message.reply(f"⚠️ {MESSAGES[lang]["error"]}\n({str(e)})")
+        await message.reply(f"⚠️ {MESSAGES[lang]['error']}\n({str(e)})")
 
 async def main():
     await dp.start_polling(bot)
