@@ -2,11 +2,17 @@ import instaloader
 import os
 import asyncio
 import re
+from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.types import ReplyKeyboardMarkup
 
-# Укажи свой токен
-TOKEN = "7583472767:AAFQ7rXjLloMv39nSvSh-Dcl1GRN5LXxi3E"
+# Загружаем переменные из .env
+load_dotenv()
+TOKEN = os.getenv("BOT_TOKEN")
+
+# Проверяем, загружен ли токен
+if not TOKEN:
+    raise ValueError("❌ BOT_TOKEN не найден! Убедитесь, что файл .env создан и содержит токен.")
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -97,7 +103,7 @@ async def handle_message(message: types.Message):
     # Проверяем, является ли текст ссылкой на Instagram
     match = INSTAGRAM_REGEX.search(text)
     if not match:
-        await message.reply(MESSAGES[lang]["humor"][hash(text) % len(MESSAGES[lang]["humor"])])
+        await message.reply(MESSAGES[lang]["humor"][hash(text) % len(MESSAGES[lang]["humor"])] )
         return
 
     await message.reply(MESSAGES[lang]["waiting"])
@@ -127,7 +133,7 @@ async def handle_message(message: types.Message):
 
     except instaloader.exceptions.ProfileNotExistsException:
         await message.reply(f"⚠️ {MESSAGES[lang]['not_found']}")
-    
+
     except instaloader.exceptions.ConnectionException:
         await message.reply(f"⚠️ {MESSAGES[lang]['blocked']}")
 
